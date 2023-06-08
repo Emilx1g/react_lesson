@@ -1,25 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+const arr = [];
+const App = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    age: "",
+  });
 
-function App() {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const { name, surname, age } = formData;
+    const inputsObject = {
+      name,
+      surname,
+      age,
+    };
+    arr.push(inputsObject);
+    console.log(arr);
+    setFormData({
+      name: "",
+      surname: "",
+      age: "",
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input
+        name="name"
+        placeholder="Name"
+        value={formData.name}
+        onChange={handleChange}
+      />
+      <input
+        name="surname"
+        placeholder="Surname"
+        value={formData.surname}
+        onChange={handleChange}
+      />
+      <input
+        name="age"
+        placeholder="Age"
+        value={formData.age}
+        onChange={handleChange}
+      />
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
-}
+};
 
 export default App;
