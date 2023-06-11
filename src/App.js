@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { ageToYear } from "./helpers.js";
 const App = () => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -14,22 +14,23 @@ const App = () => {
     setSurname(e.target.value);
   };
 
-  const ageToYear = (age) => {
-    return new Date().getFullYear() - age;
-  };
   const handleChangeAge = (e) => {
     setAge(e.target.value);
   };
+
   const onSave = () => {
     const newUser = {
       name,
       surname,
       age: ageToYear(age),
     };
+
     setName("");
     setSurname("");
     setAge("");
-    setUsers([...users, newUser]);
+    if (name.length >= 3 && surname.length >= 4 && age <= 100) {
+      setUsers([...users, newUser]);
+    }
   };
 
   return (
