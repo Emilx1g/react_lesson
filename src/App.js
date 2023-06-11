@@ -1,57 +1,78 @@
-import React, { useState } from "react";
-const arr = [];
-const App = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    age: "",
-  });
+import { useState } from "react";
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+const App = () => {
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [age, setAge] = useState("");
+  const [users, setUsers] = useState([]);
+
+  const handleChangeName = (e) => {
+    setName(e.target.value);
   };
 
-  const handleSubmit = () => {
-    const { name, surname, age } = formData;
-    const inputsObject = {
+  const handleChangeSurname = (e) => {
+    setSurname(e.target.value);
+  };
+
+  const ageToYear = (age) => {
+    return new Date().getFullYear() - age;
+  };
+  const handleChangeAge = (e) => {
+    setAge(e.target.value);
+  };
+  const onSave = () => {
+    const newUser = {
       name,
       surname,
-      age,
+      age: ageToYear(age),
     };
-    arr.push(inputsObject);
-    console.log(arr);
-    setFormData({
-      name: "",
-      surname: "",
-      age: "",
-    });
+    setName("");
+    setSurname("");
+    setAge("");
+    setUsers([...users, newUser]);
   };
 
   return (
     <div>
       <input
-        name="name"
-        placeholder="Name"
-        value={formData.name}
-        onChange={handleChange}
+        style={{ marginRight: 4 }}
+        value={name}
+        onChange={handleChangeName}
       />
       <input
-        name="surname"
-        placeholder="Surname"
-        value={formData.surname}
-        onChange={handleChange}
+        style={{ marginRight: 4 }}
+        value={surname}
+        onChange={handleChangeSurname}
       />
       <input
-        name="age"
-        placeholder="Age"
-        value={formData.age}
-        onChange={handleChange}
+        style={{ marginRight: 4 }}
+        value={age}
+        onChange={handleChangeAge}
       />
-      <button onClick={handleSubmit}>Submit</button>
+
+      <button onClick={onSave}>Save</button>
+
+      <br />
+      <table border={1}>
+        <thead>
+          <tr>
+            <td>name</td>
+            <td>surname</td>
+            <td>age</td>
+          </tr>
+        </thead>
+        {users.map((user) => {
+          return (
+            <>
+              <tr>
+                <td>{user.name}</td>
+                <td>{user.surname}</td>
+                <td>{user.age}</td>
+              </tr>
+            </>
+          );
+        })}
+      </table>
     </div>
   );
 };
