@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { ageToYear } from "./helpers.js";
+import { greaterOrEqualZero, getYear } from "./helpers.js";
+// import * as x from "./helpers.js";
+
 const App = () => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -18,19 +20,22 @@ const App = () => {
     setAge(e.target.value);
   };
 
+  const resetInputValues = () => {
+    setName("");
+    setSurname("");
+    setAge("");
+  };
+
   const onSave = () => {
     const newUser = {
       name,
       surname,
-      age: ageToYear(age),
+      year: getYear(age),
     };
 
-    setName("");
-    setSurname("");
-    setAge("");
-    if (name.length >= 3 && surname.length >= 4 && age <= 100) {
-      setUsers([...users, newUser]);
-    }
+    setUsers([...users, newUser]);
+
+    resetInputValues();
   };
 
   return (
@@ -54,23 +59,23 @@ const App = () => {
       <button onClick={onSave}>Save</button>
 
       <br />
+
       <table border={1}>
         <thead>
           <tr>
-            <td>name</td>
-            <td>surname</td>
-            <td>age</td>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Age</th>
           </tr>
         </thead>
+
         {users.map((user) => {
           return (
-            <>
-              <tr>
-                <td>{user.name}</td>
-                <td>{user.surname}</td>
-                <td>{user.age}</td>
-              </tr>
-            </>
+            <tr>
+              <td>{user.name}</td>
+              <td>{user.surname}</td>
+              <td>{user.year}</td>
+            </tr>
           );
         })}
       </table>
