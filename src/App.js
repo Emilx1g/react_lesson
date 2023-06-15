@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { isEmpty, getYear, hasMinWordCount } from "./helpers.js";
+import { getYear, hasMinWordCount } from "./helpers.js";
 
 const App = () => {
   const [name, setName] = useState("");
@@ -9,14 +9,17 @@ const App = () => {
   const [error, setError] = useState("");
 
   const handleChangeName = (e) => {
+    isValid();
     setName(e.target.value);
   };
 
   const handleChangeSurname = (e) => {
+    isValid();
     setSurname(e.target.value);
   };
 
   const handleChangeAge = (e) => {
+    isValid();
     setAge(e.target.value);
   };
 
@@ -26,24 +29,44 @@ const App = () => {
     setAge("");
     setError("");
   };
-  const isValid = () => {
-    if (isEmpty(name) || isEmpty(surname)) {
-      setError("Name and surname are required.");
-      return false;
-    } else if (hasMinWordCount(name, 3)) {
-      setError("Name must be at least 3 characters long.");
-      return false;
-    } else if (hasMinWordCount(surname, 5)) {
-      setError("surname must be at least 5 characters long.");
-      return false;
-    } else if (age < 18) {
-      setError("Age must be over 18");
-      return false;
-    } else if (age > 100) {
-      setError("Age must be under 100");
-      return false;
+  // const setAndValidateName = (name) => {
+  //   if (hasMinWordCount(name, 3)) {
+  //     setError("Name must be at least 3 characters long.");
+  //     setName(name);
+  //   } else {
+  //     setError("");
+  //     setName(name);
+  //   }
+  // };
+  // const setAndValidateSurname = (surname) => {
+  //   if (hasMinWordCount(surname, 5)) {
+  //     setError("Surname must be at least 5 characters long.");
+  //     setSurname(surname);
+  //   } else {
+  //     if (error) {
+  //       setError("");
+  //     }
+  //     setSurname(surname);
+  //   }
+  // };
+  const setAndEmptyError = (boolean, errortxt) => {
+    if (boolean && (errortxt === error || error === "")) {
+      setError(errortxt);
+    } else if (errortxt === error) {
+      setError("");
     }
-    return true;
+  };
+  const isValid = () => {
+    setAndEmptyError(
+      hasMinWordCount(name, 3),
+      "Name must be at least 3 characters long."
+    );
+    setAndEmptyError(
+      hasMinWordCount(surname, 5),
+      "Surname must be at least 5 characters long."
+    );
+    setAndEmptyError(age < 18, "Age must be between 18 and 100");
+    setAndEmptyError(age > 100, "Age must be between 18 and 100");
   };
 
   const onSave = () => {

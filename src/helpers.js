@@ -8,5 +8,5 @@ export const isEmpty = (value) => {
   return !value;
 };
 export const hasMinWordCount = (word, count) => {
-  return word.length <= count;
+  return word.length < count;
 };
