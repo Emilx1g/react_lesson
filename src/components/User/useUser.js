@@ -13,7 +13,7 @@ const useUser = (props) => {
 
   useEffect(() => {
     getUsersFromStorage();
-  }, []);
+  }, localStorage);
 
   const isInStorage = usersFromStorage.find((u) => u.id === user.id);
 
