@@ -33,15 +33,16 @@ const useUser = (props) => {
   };
 
   const deleteUser = () => {
-    getUsersFromStorage();
     const deletedUserIndex = usersFromStorage.findIndex(
       (u) => u.id === user.id
     );
-    let storageUser = usersFromStorage;
-    storageUser.splice(deletedUserIndex, 1);
 
-    const usersFromStorageJSON = JSON.stringify(storageUser);
+    usersFromStorage.splice(deletedUserIndex, 1);
+
+    const usersFromStorageJSON = JSON.stringify(usersFromStorage);
     localStorage.setItem("users", usersFromStorageJSON);
+
+    getUsersFromStorage();
   };
 
   return {

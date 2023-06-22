@@ -25,7 +25,7 @@ const User = (props) => {
             Save
           </MainButton>
         ) : (
-          <DeleteButton onClick={deleteUser} startIcon={"-"}>
+          <DeleteButton onClick={deleteUser} startIcon={"+"}>
             Delete
           </DeleteButton>
         )}
