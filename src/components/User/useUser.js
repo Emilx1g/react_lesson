@@ -15,14 +15,28 @@ const useUser = (props) => {
     getUsersFromStorage();
   }, []);
 
+  useEffect(() => {
+    // Update the local storage whenever `usersFromStorage` changes
+    const usersFromStorageJSON = JSON.stringify(usersFromStorage);
+    localStorage.setItem("users", usersFromStorageJSON);
+  }, [usersFromStorage]);
+
   const isInStorage = usersFromStorage.find((u) => u.id === user.id);
 
   const saveUser = () => {
     let users = localStorage.getItem("users");
     if (users) {
       users = JSON.parse(users);
-      users.push(user);
+      const existingUserIndex = users.findIndex((u) => u.id === user.id);
+      if (existingUserIndex !== -1) {
+        // User already exists, update the existing user
+        users[existingUserIndex] = user;
+      } else {
+        // User doesn't exist, add the new user
+        users.push(user);
+      }
     } else {
+      // No users in local storage, add the new user
       users = [user];
     }
 
@@ -33,14 +47,10 @@ const useUser = (props) => {
   };
 
   const deleteUser = () => {
-    const deletedUserIndex = usersFromStorage.findIndex(
-      (u) => u.id === user.id
-    );
+    const updatedUsers = usersFromStorage.filter((u) => u.id !== user.id);
 
-    usersFromStorage.splice(deletedUserIndex, 1);
-
-    const usersFromStorageJSON = JSON.stringify(usersFromStorage);
-    localStorage.setItem("users", usersFromStorageJSON);
+    const updatedUsersJSON = JSON.stringify(updatedUsers);
+    localStorage.setItem("users", updatedUsersJSON);
 
     getUsersFromStorage();
   };
