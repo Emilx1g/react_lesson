@@ -1,22 +1,35 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Users from "../Users/Users";
 import EditUser from "../EditUser/EditUser";
 
 const Main = () => {
-  const [id, setId] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    let usersData = localStorage.getItem("users");
-    setUsers(JSON.parse(usersData));
-    setId(1);
+    const usersData = localStorage.getItem("users");
+    setUsers(JSON.parse(usersData) || []);
   }, []);
+
+  const handleUserClick = (id) => {
+    setSelectedUserId(id);
+  };
+
+  const handleUserUpdate = (updatedUsers) => {
+    setUsers(updatedUsers);
+  };
 
   return (
     <div>
-      <Users users={users} />
+      <Users users={users} onUserClick={handleUserClick} />
 
-      <EditUser id={id} users={users} />
+      {selectedUserId && (
+        <EditUser
+          id={selectedUserId}
+          users={users}
+          onUpdate={handleUserUpdate}
+        />
+      )}
     </div>
   );
 };
