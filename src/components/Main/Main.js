@@ -1,20 +1,23 @@
-import Users from "../Users/Users.js";
-import useMain from "./useMain.js";
-import editUser from "../edit user/editUser.js";
+import { useState, useEffect } from "react";
+import Users from "../Users/Users";
+import EditUser from "../EditUser/EditUser";
+
 const Main = () => {
-  const { toggleTable, isShowTable, users } = useMain();
+  const [id, setId] = useState(null);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    let usersData = localStorage.getItem("users");
+    setUsers(JSON.parse(usersData));
+    setId(1);
+  }, []);
+
   return (
-    <>
-      <div>
-        <button onClick={toggleTable}>Show Table</button>
+    <div>
+      <Users users={users} />
 
-        <br />
-        <br />
-
-        {isShowTable && <Users users={users} />}
-        {<editUser />}
-      </div>
-    </>
+      <EditUser id={id} users={users} />
+    </div>
   );
 };
 

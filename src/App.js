@@ -1,10 +1,10 @@
 import Main from "./components/Main/Main";
+import usersData from "./data/users";
 
-const App = () => {
+localStorage.setItem("users", JSON.stringify(usersData));
+
+function App() {
   return <Main />;
-};
+}
 
 export default App;
-
-// = useState(100)
-// [100, fn]

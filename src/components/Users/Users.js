@@ -1,26 +1,29 @@
-import User from "../User/User.js";
+import styles from "./styles";
+import useUsers from "./useUsers";
 
 const Users = (props) => {
-  console.log(props);
-  //   console.log(props.users);
-
+  //   const { setEditableUser } = useUsers();
   const { users } = props;
+  const { setEditableUser } = useUsers(props);
 
   return (
-    <table border={1}>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Website</th>
-          <th>Address</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+    <table style={styles.table}>
+      <tr>
+        <th style={styles.tdAndTh}>ID</th>
+        <th style={styles.tdAndTh}>Name</th>
+        <th style={styles.tdAndTh}>Surname</th>
+        <th style={styles.tdAndTh}>Actions</th>
+      </tr>
 
       {users.map((user) => {
         return (
           <tr>
-            <User user={user} />
+            <td style={styles.tdAndTh}>{user.id}</td>
+            <td style={styles.tdAndTh}>{user.name}</td>
+            <td style={styles.tdAndTh}>{user.surname}</td>
+            <td style={styles.tdAndTh}>
+              <button onClick={() => setEditableUser(user.id)}>Edit</button>
+            </td>
           </tr>
         );
       })}

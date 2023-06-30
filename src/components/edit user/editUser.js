@@ -1,8 +1,4 @@
-const editUser = () => {
-  return (
-    <>
-      <input>hiiiiii</input>
-    </>
-  );
+const EditUser = () => {
+  return <input />;
 };
-export default editUser;
+export default EditUser;
