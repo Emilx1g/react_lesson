@@ -1,38 +1,37 @@
-import React, { useState, useEffect } from "react";
-import Users from "../Users/Users";
-import EditUser from "../EditUser/EditUser";
+import React from "react";
+import Tasks from "../Tasks/Tasks";
+import AddComment from "../AddComment/AddComment";
+import useMain from "./useMain";
 
-const useUsers = () => {
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const usersData = localStorage.getItem("users");
-    setUsers(JSON.parse(usersData) || []);
-  }, []);
-
-  const handleUserClick = (id) => {
-    setSelectedUserId(id);
-  };
-
-  const handleUserUpdate = (updatedUsers) => {
-    setUsers(updatedUsers);
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-  };
+const Main = () => {
+  const {
+    tasks,
+    setTasks,
+    taskId,
+    setTaskId,
+    showAddComment,
+    setShowAddComment,
+  } = useMain();
 
   return (
     <div>
-      <Users users={users} onUserClick={handleUserClick} />
+      <Tasks
+        tasks={tasks}
+        setTasks={setTasks}
+        setTaskId={setTaskId}
+        setShowAddComment={setShowAddComment}
+      />
 
-      {selectedUserId && (
-        <EditUser
-          id={selectedUserId}
-          users={users}
-          onUpdate={handleUserUpdate}
+      {showAddComment && (
+        <AddComment
+          taskId={taskId}
+          tasks={tasks}
+          setTasks={setTasks}
+          setShowAddComment={setShowAddComment}
         />
       )}
     </div>
   );
 };
 
-export default useUsers;
+export default Main;
