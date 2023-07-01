@@ -1,7 +1,11 @@
 import React from "react";
 import styles from "./styles";
 
-const Users = ({ users, onUserClick }) => {
+const Users = ({ users, onUserClick, onUserUpdate }) => {
+  const handleUserUpdate = (updatedUsers) => {
+    onUserUpdate(updatedUsers);
+  };
+
   return (
     <table style={styles.table}>
       <thead>

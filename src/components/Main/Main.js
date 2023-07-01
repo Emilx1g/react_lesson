@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Users from "../Users/Users";
 import EditUser from "../EditUser/EditUser";
 
-const Main = () => {
+const useUsers = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [users, setUsers] = useState([]);
 
@@ -17,6 +17,7 @@ const Main = () => {
 
   const handleUserUpdate = (updatedUsers) => {
     setUsers(updatedUsers);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   return (
@@ -34,4 +35,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default useUsers;
