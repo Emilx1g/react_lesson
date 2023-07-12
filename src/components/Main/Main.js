@@ -11,7 +11,16 @@ const Main = () => {
     setTaskId,
     showAddComment,
     setShowAddComment,
+    setEditTaskId,
+    setEditUser,
+    setEditDescription,
   } = useMain();
+
+  const editTask = (taskId, user, description) => {
+    setEditTaskId(taskId);
+    setEditUser(user);
+    setEditDescription(description);
+  };
 
   return (
     <div>
@@ -20,6 +29,7 @@ const Main = () => {
         setTasks={setTasks}
         setTaskId={setTaskId}
         setShowAddComment={setShowAddComment}
+        editTask={editTask}
       />
 
       {showAddComment && (

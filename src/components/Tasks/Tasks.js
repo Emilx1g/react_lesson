@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import styles from "./styles";
 
 const Tasks = (props) => {
-  const { tasks, setTasks, setShowAddComment, setTaskId } = props;
+  const { tasks, setTasks, setShowAddComment, setTaskId, editTask } = props;
   const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [editedUser, setEditedUser] = useState({ name: "", surname: "" });
+  const [editedDescription, setEditedDescription] = useState("");
 
   const addComment = (id) => {
     setTaskId(id);
@@ -33,6 +35,28 @@ const Tasks = (props) => {
     setSelectedTaskId(null);
   };
 
+  const saveEditedTask = (taskId) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        task.user = { ...editedUser };
+        task.description = editedDescription;
+      }
+      return task;
+    });
+
+    setTasks(updatedTasks);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    setSelectedTaskId(null);
+    setEditedUser({ name: "", surname: "" });
+    setEditedDescription("");
+  };
+
+  const handleEditTask = (taskId, name, surname, description) => {
+    setSelectedTaskId(taskId);
+    setEditedUser({ name, surname });
+    setEditedDescription(description);
+  };
+
   return (
     <div>
       <table style={styles.table}>
@@ -49,10 +73,45 @@ const Tasks = (props) => {
             <>
               <tr>
                 <td style={styles.tdAndTh}>
-                  {task.user.name} {task.user.surname}
+                  {selectedTaskId === task.id ? (
+                    <>
+                      <input
+                        type="text"
+                        value={editedUser.name}
+                        onChange={(e) =>
+                          setEditedUser({
+                            ...editedUser,
+                            name: e.target.value,
+                          })
+                        }
+                      />
+                      <input
+                        type="text"
+                        value={editedUser.surname}
+                        onChange={(e) =>
+                          setEditedUser({
+                            ...editedUser,
+                            surname: e.target.value,
+                          })
+                        }
+                      />
+                    </>
+                  ) : (
+                    `${task.user.name} ${task.user.surname}`
+                  )}
                 </td>
                 <td style={styles.tdAndTh}>{task.status}</td>
-                <td style={styles.tdAndTh}>{task.description}</td>
+                <td style={styles.tdAndTh}>
+                  {selectedTaskId === task.id ? (
+                    <input
+                      type="text"
+                      value={editedDescription}
+                      onChange={(e) => setEditedDescription(e.target.value)}
+                    />
+                  ) : (
+                    task.description
+                  )}
+                </td>
                 <td style={styles.tdAndTh}>
                   <button onClick={() => addComment(task.id)}>
                     Add Comment
@@ -60,7 +119,29 @@ const Tasks = (props) => {
                   <button onClick={() => toggleComments(task.id)}>
                     View Comments
                   </button>
-                  <button>Edit</button>
+                  {selectedTaskId === task.id ? (
+                    <>
+                      <button onClick={() => saveEditedTask(task.id)}>
+                        Save
+                      </button>
+                      <button onClick={() => setSelectedTaskId(null)}>
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        handleEditTask(
+                          task.id,
+                          task.user.name,
+                          task.user.surname,
+                          task.description
+                        )
+                      }
+                    >
+                      Edit
+                    </button>
+                  )}
                   <button onClick={() => deleteTask(task.id)}>Delete</button>
                   <button onClick={() => updateStatus(task.id, "Active")}>
                     Active
