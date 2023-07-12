@@ -3,7 +3,9 @@ import styles from "./styles";
 
 const Tasks = (props) => {
   const { tasks, setTasks, setShowAddComment, setTaskId, editTask } = props;
+
   const [selectedTaskId, setSelectedTaskId] = useState(null);
+  const [showComments, setShowComments] = useState(false);
   const [editedUser, setEditedUser] = useState({ name: "", surname: "" });
   const [editedDescription, setEditedDescription] = useState("");
 
@@ -14,6 +16,7 @@ const Tasks = (props) => {
 
   const toggleComments = (id) => {
     setSelectedTaskId((prevTaskId) => (prevTaskId === id ? null : id));
+    setShowComments(true);
   };
 
   const updateStatus = (taskId, newStatus) => {
@@ -32,7 +35,7 @@ const Tasks = (props) => {
     const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
-    setSelectedTaskId(null);
+    // setSelectedTaskId(null);
   };
 
   const saveEditedTask = (taskId) => {
@@ -47,13 +50,18 @@ const Tasks = (props) => {
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
     setSelectedTaskId(null);
-    setEditedUser({ name: "", surname: "" });
-    setEditedDescription("");
+    // setEditedUser({ name: "", surname: "" });
+    // setEditedDescription("");
   };
 
-  const handleEditTask = (taskId, name, surname, description) => {
+  const handleEditTask = (task) => {
+    const {
+      id: taskId,
+      user: { name: userName, surname: userSurname },
+      description,
+    } = task;
     setSelectedTaskId(taskId);
-    setEditedUser({ name, surname });
+    setEditedUser({ name: userName, surname: userSurname });
     setEditedDescription(description);
   };
 
@@ -73,7 +81,7 @@ const Tasks = (props) => {
             <>
               <tr>
                 <td style={styles.tdAndTh}>
-                  {selectedTaskId === task.id ? (
+                  {selectedTaskId === task.id && !showComments ? (
                     <>
                       <input
                         type="text"
@@ -102,7 +110,7 @@ const Tasks = (props) => {
                 </td>
                 <td style={styles.tdAndTh}>{task.status}</td>
                 <td style={styles.tdAndTh}>
-                  {selectedTaskId === task.id ? (
+                  {selectedTaskId === task.id && !showComments ? (
                     <input
                       type="text"
                       value={editedDescription}
@@ -124,25 +132,20 @@ const Tasks = (props) => {
                       <button onClick={() => saveEditedTask(task.id)}>
                         Save
                       </button>
-                      <button onClick={() => setSelectedTaskId(null)}>
+                      <button
+                        onClick={() => {
+                          setSelectedTaskId(null);
+                          setShowComments(false);
+                        }}
+                      >
                         Cancel
                       </button>
                     </>
                   ) : (
-                    <button
-                      onClick={() =>
-                        handleEditTask(
-                          task.id,
-                          task.user.name,
-                          task.user.surname,
-                          task.description
-                        )
-                      }
-                    >
-                      Edit
-                    </button>
+                    <button onClick={() => handleEditTask(task)}>Edit</button>
                   )}
                   <button onClick={() => deleteTask(task.id)}>Delete</button>
+
                   <button onClick={() => updateStatus(task.id, "Active")}>
                     Active
                   </button>
@@ -154,7 +157,7 @@ const Tasks = (props) => {
                   </button>
                 </td>
               </tr>
-              {selectedTaskId === task.id && (
+              {selectedTaskId === task.id && showComments && (
                 <tr>
                   <td colSpan="4">
                     {task.comments.length > 0 ? (
